@@ -1,0 +1,1 @@
+as @e[type=$line_icon,tag=activeLine,limit=1] at @s positioned ~ ~ ~-1 align xyz function logiccraft:verify/line

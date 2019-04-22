@@ -1,0 +1,8 @@
+@on compile
+
+var backgrounds = {
+    body:      block<minecraft:white_concrete>,
+    bodyStart: block<minecraft:light_gray_concrete>,
+    prem:      block<minecraft:yellow_concrete>,
+    premStart: block<minecraft:orange_concrete>
+}

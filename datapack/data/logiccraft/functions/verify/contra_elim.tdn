@@ -1,0 +1,15 @@
+
+unless score #CURR_SINGLE temp matches 1 data modify entity @s ArmorItems[3].tag.CustomModelData set value 3
+unless score #CURR_SUBPRF temp matches 0 data modify entity @s ArmorItems[3].tag.CustomModelData set value 3
+
+if score #CURR_SINGLE temp matches 1 if score #CURR_SUBPRF temp matches 0 function correct_num_premises {
+    
+    as @e[type=$line_icon] if score @s lineNum = #CURR_SINGLE justif1Start at @s positioned ~ ~ ~-1 align xyz function copy_in {
+        unless data block 0 ~ -1 RecordItem.tag.tree function logiccraft:parse/line
+        
+        execute store result score #TEMP temp if data block 0 ~ -1 RecordItem.tag.tree{identifier:"contradiction"}
+    }
+    
+    if score #TEMP temp matches 1.. data modify entity @s ArmorItems[3].tag.CustomModelData set value 2
+    if score #TEMP temp matches 0 data modify entity @s ArmorItems[3].tag.CustomModelData set value 3
+}

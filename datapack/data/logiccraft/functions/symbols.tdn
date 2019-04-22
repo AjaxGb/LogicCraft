@@ -1,0 +1,333 @@
+@on compile
+@require logiccraft:define_blocks
+@require logiccraft:line_icon
+
+var makeLetterItem = function(index) {
+    var letter = letters[index]
+    var letterNBT = new nbt({
+        display: new nbt({
+            Name: new text_component({"text": letter.toUpperCase(), "italic": false})
+        }),
+        Symbol: new nbt({
+            type: "identifier",
+            identifier: "letter",
+            letter: new nbt(letter.toUpperCase()),
+            letterID: index + 1
+        }),
+        PremiseSetter: new nbt(true),
+        CustomModelData: index + 10
+    })
+    
+    return item<$symbol_item$letterNBT>
+}
+
+define entity symbol minecraft:armor_stand {
+    default nbt {
+        Marker: true,
+        Invisible: true
+    }
+    
+    ticking function tick {
+        if block ~ ~ ~ minecraft:air align xyz function destroyed {
+            if entity @s[tag=bodyBG,tag=!startBG] setblock ~ ~ ~ ${backgrounds.body}
+            if entity @s[tag=bodyBG,tag=startBG] setblock ~ ~ ~ ${backgrounds.bodyStart}
+            if entity @s[tag=premiseBG,tag=!startBG] setblock ~ ~ ~ ${backgrounds.prem}
+            if entity @s[tag=premiseBG,tag=startBG] setblock ~ ~ ~ ${backgrounds.premStart}
+            
+            as @e[type=$line_icon,x=-1,z=1,dx=0,dy=0,dz=0,limit=1] at @s positioned ~ ~ ~-1 align xyz function update_line {
+                scoreboard players remove @s lineChars 1
+                if score @s lineChars matches 1.. function logiccraft:reset_validation
+                kill @s[scores={lineChars=..0}]
+                #TODO: Delete associated justifications
+            }
+            
+            kill @s
+        }
+    }
+}
+
+define item symbol_item minecraft:endermite_spawn_egg {
+    default nbt {
+        EntityTag: {
+            id: "minecraft:area_effect_cloud",
+            Tags: ["placedSymbolMarker"],
+            Duration: 0,
+            WaitTime: 1,
+            Radius: 0f
+        }
+    }
+    
+    on used function used {
+        at @e[type=minecraft:area_effect_cloud,tag=placedSymbolMarker] rotated 0 0 positioned ^ ^ ^-1 align xyz function at {
+            using tag placer @s {
+                if entity @s[nbt={SelectedItem:{tag:{Symbol:{meta:"subproof"}}}}] if block ~ ~ ~ #logiccraft:body function subproof {
+                    
+                }
+                
+                unless entity @s[nbt={SelectedItem:{tag:{Symbol:{type:"meta"}}}}] if block ~ ~ ~ #logiccraft:writable function write_char {
+                    unless entity @e[type=$line_icon,x=-1,z=1,dx=0,dy=0,dz=0,limit=1] function add_line_icon {
+                        using summon $line_icon -0.5 ~0.2 1.2 with newLineIcon {
+                            store result score @s temp data get entity @s Pos[1]
+                            scoreboard players set @s lineNum 256
+                            scoreboard players operation @s lineNum -= @s temp
+                            if block 64 ~ ~ #logiccraft:premise tag @s add premise
+                            if block 64 ~ ~ #logiccraft:body tag @s add body
+                        }
+                    }
+                    
+                    if entity @e[type=$symbol,dx=0,dy=0,dz=0,limit=1] function kill_old {
+                        scoreboard players remove @e[type=$line_icon,x=-1,z=1,dx=0,dy=0,dz=0,limit=1] lineChars 1
+                        kill @e[type=$symbol,dx=0,dy=0,dz=0,limit=1]
+                    }
+                    
+                    as @e[type=$line_icon,x=-1,z=1,dx=0,dy=0,dz=0,limit=1] function logiccraft:reset_validation
+                    
+                    scoreboard players add @e[type=$line_icon,x=-1,z=1,dx=0,dy=0,dz=0,limit=1] lineChars 1
+                    
+                    using summon $symbol ~0.5 ~0.5 ~0.5 with needsItem {
+                        data modify entity @s ArmorItems[3] set from entity @a[tag=placer,limit=1] SelectedItem
+                        if block ~ ~ ~ #logiccraft:body tag @s add bodyBG
+                        if block ~ ~ ~ #logiccraft:premise tag @s add premiseBG
+                        if block ~ ~ ~ #logiccraft:start tag @s add startBG
+                        
+                        if block ~ ~ ~ #logiccraft:premise unless block ~ ~-1 ~ #logiccraft:premise function logiccraft:insert_blank_line
+                        # TODO: extend sub-proof if last line
+                    }
+                }
+                
+                if entity @s[nbt={SelectedItem:{tag:{Justif:{}}}}] if block ~ ~ ~ #logiccraft:line_icon
+                        as @e[type=$line_icon,tag=!premise,z=1,dx=0,dy=0,dz=0,limit=1] function set_justification_type {
+                    
+                    store success score #OP_CHANGED temp
+                        data modify block 0 ~ -1 RecordItem.tag.justifOp set from entity @a[tag=placer,limit=1] SelectedItem.tag.Symbol.op
+                    if score #OP_CHANGED temp matches 1.. data modify block 0 ~ -1 RecordItem.tag.justifIntro set value true
+                    if score #OP_CHANGED temp matches 0 store success score #INTRO_WAS_TRUE temp
+                        data modify block 0 ~ -1 RecordItem.tag.justifIntro set value false
+                    if score #OP_CHANGED temp matches 0 if score #INTRO_WAS_TRUE temp matches 0
+                        data modify block 0 ~ -1 RecordItem.tag.justifIntro set value true
+                    
+                    if block 0 ~ -1 minecraft:jukebox{RecordItem:{tag:{justifIntro:true}}}
+                        data modify entity @s CustomName set from entity @a[tag=placer,limit=1] SelectedItem.tag.Justif.IntroName
+                    if block 0 ~ -1 minecraft:jukebox{RecordItem:{tag:{justifIntro:false}}}
+                        data modify entity @s CustomName set from entity @a[tag=placer,limit=1] SelectedItem.tag.Justif.ElimName
+                    data modify entity @s CustomNameVisible set value true
+                    
+                    function logiccraft:reset_validation
+                }
+                if entity @s[nbt={SelectedItem:{tag:{Justif:{}}}}] if block ~ ~ ~ #logiccraft:line_icon
+                    if entity @e[type=$line_icon,tag=premise,z=1,dx=0,dy=0,dz=0,limit=1]
+                    title @s actionbar {"text":"You cannot justify premises","color":"red"}   
+                
+                if entity @s[nbt={SelectedItem:{tag:{PremiseSetter:true}}}] if block ~ ~ ~ #logiccraft:line_icon
+                        if entity @e[type=$line_icon,tag=activeLine]
+                        as @e[type=$line_icon,x=-1,z=1,dx=0,dy=0,dz=0,limit=1]
+                        if score @s lineNum < @e[type=$line_icon,tag=activeLine,limit=1] lineNum
+                        function set_premise {
+                    
+                    if score #ACTIVE justif1Start = @s lineNum if score #ACTIVE justif1End = @s lineNum function unset1 {
+                        scoreboard players reset @e[type=$line_icon,tag=activeLine] justif1Start
+                        scoreboard players reset @e[type=$line_icon,tag=activeLine] justif1End
+                        tag @s add premisesChanged
+                    }
+                    if score #ACTIVE justif2Start = @s lineNum if score #ACTIVE justif2End = @s lineNum function unset2 {
+                        scoreboard players reset @e[type=$line_icon,tag=activeLine] justif2Start
+                        scoreboard players reset @e[type=$line_icon,tag=activeLine] justif2End
+                        tag @s add premisesChanged
+                    }
+                    if score #ACTIVE justif3Start = @s lineNum if score #ACTIVE justif3End = @s lineNum function unset3 {
+                        scoreboard players reset @e[type=$line_icon,tag=activeLine] justif3Start
+                        scoreboard players reset @e[type=$line_icon,tag=activeLine] justif3End
+                        tag @s add premisesChanged
+                    }
+                    
+                    unless entity @s[tag=premisesChanged] function set {
+                        unless score #ACTIVE justif1Start matches 0.. function 1 {
+                            scoreboard players operation @e[type=$line_icon,tag=activeLine] justif1Start = @s lineNum
+                            scoreboard players operation @e[type=$line_icon,tag=activeLine] justif1End = @s lineNum
+                            tag @s add premisesChanged
+                        }
+                        if score #ACTIVE justif1Start matches 0.. unless score #ACTIVE justif2Start matches 0.. function 2 {
+                            scoreboard players operation @e[type=$line_icon,tag=activeLine] justif2Start = @s lineNum
+                            scoreboard players operation @e[type=$line_icon,tag=activeLine] justif2End = @s lineNum
+                            tag @s add premisesChanged
+                        }
+                        if score #ACTIVE justif1Start matches 0.. if score #ACTIVE justif2Start matches 0.. unless score #ACTIVE justif3Start matches 0.. function 3 {
+                            scoreboard players operation @e[type=$line_icon,tag=activeLine] justif3Start = @s lineNum
+                            scoreboard players operation @e[type=$line_icon,tag=activeLine] justif3End = @s lineNum
+                            tag @s add premisesChanged
+                        }
+                        if score #ACTIVE justif1Start matches 0.. if score #ACTIVE justif2Start matches 0.. if score #ACTIVE justif3Start matches 0..
+                            title @a[tag=placer,limit=1] actionbar {"text":"All 3 premises have already been set for this line","color":"red"}
+                    }
+                    
+                    if entity @s[tag=premisesChanged] as @e[type=$line_icon,tag=activeLine] function {
+                        scoreboard players reset #ACTIVE justif1Start
+                        scoreboard players reset #ACTIVE justif1End
+                        scoreboard players reset #ACTIVE justif2Start
+                        scoreboard players reset #ACTIVE justif2End
+                        scoreboard players reset #ACTIVE justif3Start
+                        scoreboard players reset #ACTIVE justif3End
+                        scoreboard players operation #ACTIVE justif1Start = @s[scores={justif1Start=isset}] justif1Start
+                        scoreboard players operation #ACTIVE justif1End   = @s[scores={justif1End=isset}] justif1End
+                        scoreboard players operation #ACTIVE justif2Start = @s[scores={justif2Start=isset}] justif2Start
+                        scoreboard players operation #ACTIVE justif2End   = @s[scores={justif2End=isset}] justif2End
+                        scoreboard players operation #ACTIVE justif3Start = @s[scores={justif3Start=isset}] justif3Start
+                        scoreboard players operation #ACTIVE justif3End   = @s[scores={justif3End=isset}] justif3End
+                        
+                        function logiccraft:reset_validation
+                    }
+                    tag @s remove premisesChanged
+                }
+            }
+        }
+        kill @e[type=minecraft:area_effect_cloud,tag=placedSymbolMarker]
+    }
+    
+    on dropped function dropped {
+        store result score @s temp data get entity @e[type=minecraft:item,nbt={Item:{tag:{Symbol:{}}}},sort=nearest,limit=1] Item.tag.Symbol.letterID
+        unless score @s temp matches 0 kill @e[type=minecraft:item,nbt={Item:{tag:{Symbol:{}}}},sort=nearest,limit=1]
+        var i = 1
+        for (i = 1; i <= letters.length; i++) {
+            if score @s temp matches $i give @s ${makeLetterItem(i % letters.length)}
+        }
+    }
+}
+
+var symbolItems = {
+    and: item<$symbol_item{
+        display: {
+            Name: '{"text":"AND","italic":false}'
+        },
+        Symbol: {
+            type: "binary",
+            op: "and"
+        },
+        Justif: {
+            IntroName: '"AND Intro"',
+            ElimName: '"AND Elim"'
+        },
+        CustomModelData: 1
+    }>,
+    or: item<$symbol_item{
+        display: {
+            Name: '{"text":"OR","italic":false}'
+        },
+        Symbol: {
+            type: "binary",
+            op: "or"
+        },
+        Justif: {
+            IntroName: '"OR Intro"',
+            ElimName: '"OR Elim"'
+        },
+        CustomModelData: 2
+    }>,
+    not: item<$symbol_item{
+        display: {
+            Name: '{"text":"NOT","italic":false}'
+        },
+        Symbol: {
+            type: "unary",
+            op: "not"
+        },
+        Justif: {
+            IntroName: '"NOT Intro"',
+            ElimName: '"NOT Elim"'
+        },
+        CustomModelData: 3
+    }>,
+    condition: item<$symbol_item{
+        display: {
+            Name: '{"text":"CONDITIONAL","italic":false}'
+        },
+        Symbol: {
+            type: "binary",
+            op: "condition"
+        },
+        Justif: {
+            IntroName: '"CONDITION Intro"',
+            ElimName: '"CONDITION Elim"'
+        },
+        CustomModelData: 4
+    }>,
+    bicondition: item<$symbol_item{
+        display: {
+            Name: '{"text":"BICONDITIONAL","italic":false}'
+        },
+        Symbol: {
+            type: "binary",
+            op: "bicondition"
+        },
+        Justif: {
+            IntroName: '"BICOND Intro"',
+            ElimName: '"BICOND Elim"'
+        },
+        CustomModelData: 5
+    }>,
+    contradiction: item<$symbol_item{
+        display: {
+            Name: '{"text":"CONTRADICTION","italic":false}'
+        },
+        Symbol: {
+            type: "identifier",
+            identifier: "contradiction",
+            op: "contradiction"
+        },
+        Justif: {
+            IntroName: '"CONTRA Intro"',
+            ElimName: '"CONTRA Elim"'
+        },
+        CustomModelData: 6
+    }>,
+    open_parens: item<$symbol_item{
+        display: {
+            Name: '{"text":"OPEN PARENTHESIS","italic":false}'
+        },
+        Symbol: {
+            type: "parenthesis",
+            parenthesis: "open"
+        },
+        CustomModelData: 7
+    }>,
+    close_parens: item<$symbol_item{
+        display: {
+            Name: '{"text":"CLOSE PARENTHESIS","italic":false}'
+        },
+        Symbol: {
+            type: "parenthesis",
+            parenthesis: "close"
+        },
+        CustomModelData: 8
+    }>,
+    subproof: item<$symbol_item{
+        display: {
+            Name: '{"text":"SUBPROOF","italic":false}'
+        },
+        Symbol: {
+            type: "meta",
+            meta: "subproof"
+        },
+        CustomModelData: 9
+    }>
+}
+
+var symbolItemList = [
+    symbolItems.and,
+    symbolItems.or,
+    symbolItems.not,
+    symbolItems.condition,
+    symbolItems.bicondition,
+    symbolItems.contradiction,
+    symbolItems.open_parens,
+    symbolItems.close_parens,
+    symbolItems.subproof
+]
+var letterItemList = []
+
+var i = 0
+for (i = 0; i < letters.length; i++) {
+    var letterItem = makeLetterItem(i)
+    eval symbolItems[letters[i]] = letterItem
+    eval symbolItemList.add(letterItem)
+    eval letterItemList.add(letterItem)
+}

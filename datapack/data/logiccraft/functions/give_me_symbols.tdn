@@ -1,0 +1,12 @@
+@require logiccraft:symbols
+
+replaceitem entity @s hotbar.0 ${symbolItems.a}
+replaceitem entity @s hotbar.1 ${symbolItems.and}
+replaceitem entity @s hotbar.2 ${symbolItems.or}
+replaceitem entity @s hotbar.3 ${symbolItems.not}
+replaceitem entity @s hotbar.4 ${symbolItems.condition}
+replaceitem entity @s hotbar.5 ${symbolItems.bicondition}
+replaceitem entity @s hotbar.6 ${symbolItems.contradiction}
+replaceitem entity @s hotbar.7 ${symbolItems.open_parens}
+replaceitem entity @s hotbar.8 ${symbolItems.close_parens}
+replaceitem entity @s weapon.offhand ${symbolItems.subproof}

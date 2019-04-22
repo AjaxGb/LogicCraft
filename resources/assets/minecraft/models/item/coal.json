@@ -1,0 +1,24 @@
+{
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "item/coal"
+	},
+	"overrides": [
+		{
+			"predicate": { "custom_model_data": 1 },
+			"model": "logiccraft:item/invisible"
+		},
+		{
+			"predicate": { "custom_model_data": 2 },
+			"model": "logiccraft:item/valid"
+		},
+		{
+			"predicate": { "custom_model_data": 3 },
+			"model": "logiccraft:item/invalid"
+		},
+		{
+			"predicate": { "custom_model_data": 4 },
+			"model": "logiccraft:item/unjustified"
+		}
+	]
+}

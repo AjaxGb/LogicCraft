@@ -1,0 +1,33 @@
+
+var getChar = function(callback, errorOnNoChar) {
+    as @e[tag=parseCursor,x=0,z=0,dx=64,dy=0,dz=0,limit=1] at @s align xyz function {
+        as @e[type=$symbol,dx=64,dy=0,dz=0,sort=nearest,limit=1] at @s align xyz function $callback
+        
+        switch (errorOnNoChar) {
+        case null:
+        case true:
+            unless entity @e[type=$symbol,dx=64,dy=0,dz=0,limit=1] function {
+                tellraw @a "Unexpected end of line"
+                function logiccraft:parse/error
+            }
+        }
+    }
+}
+
+var advanceCursor = function() {
+    align xyz teleport @e[tag=parseCursor,x=0,z=0,dx=64,dy=0,dz=0,limit=1] ~1.5 ~0.5 ~0.5
+}
+
+data remove block 0 ~ -1 RecordItem.tag.tree
+
+align y summon minecraft:area_effect_cloud 0 ~ 0 {Tags:["parseCursor"],Age:-2147483648,Duration:-1,WaitTime:-2147483648}
+
+function logiccraft:parse/expression
+eval getChar(function {
+    tellraw @a ["Trailing data: ",{"nbt":"ArmorItems[3].tag.display.Name","entity":"@s","interpret":true}]
+    function logiccraft:parse/error
+}, false)
+
+kill @e[tag=parseCursor]
+data remove block 0 ~ -1 RecordItem.tag.tempTree
+tellraw @a ["Result: ",{"nbt":"RecordItem.tag.tree","block":"0 ~ -1"}]

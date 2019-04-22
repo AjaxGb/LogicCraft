@@ -1,0 +1,36 @@
+@require logiccraft:parse/line
+
+eval getChar(function {
+    if data entity @s ArmorItems[3].tag.Symbol{type:"identifier"} function {
+        data modify block 0 ~ -1 RecordItem.tag.tree set from entity @s ArmorItems[3].tag.Symbol
+        eval advanceCursor()
+    }
+    if data entity @s ArmorItems[3].tag.Symbol{type:"unary"} function {
+        data modify block 0 ~ -1 RecordItem.tag.tempTree append from entity @s ArmorItems[3].tag.Symbol
+        eval advanceCursor()
+        function logiccraft:parse/value
+        data modify block 0 ~ -1 RecordItem.tag.tempTree[-1].operand set from block 0 ~ -1 RecordItem.tag.tree
+        data modify block 0 ~ -1 RecordItem.tag.tree set from block 0 ~ -1 RecordItem.tag.tempTree[-1]
+        data remove block 0 ~ -1 RecordItem.tag.tempTree[-1]
+    }
+    if data entity @s ArmorItems[3].tag.Symbol{parenthesis:"open"} function {
+        eval advanceCursor()
+        function logiccraft:parse/expression
+        eval getChar(function {
+            if data entity @s ArmorItems[3].tag.Symbol{parenthesis:"close"} function {
+                eval advanceCursor()
+            }
+            unless data entity @s ArmorItems[3].tag.Symbol{parenthesis:"close"} function {
+                tellraw @a ["Expected close parens, got ",{"nbt":"ArmorItems[3].tag.display.Name","entity":"@s","interpret":true}]
+                function logiccraft:parse/error
+            }
+        })
+    }
+    
+    unless data entity @s ArmorItems[3].tag.Symbol{type:"identifier"}
+    unless data entity @s ArmorItems[3].tag.Symbol{type:"unary"}
+    unless data entity @s ArmorItems[3].tag.Symbol{parenthesis:"open"} function {
+        tellraw @a ["Expected letter|contra|not|open parens, got ",{"nbt":"ArmorItems[3].tag.display.Name","entity":"@s","interpret":true}]
+        function logiccraft:parse/error
+    }
+})

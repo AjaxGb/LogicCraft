@@ -1,0 +1,145 @@
+{
+	"parent": "item/template_spawn_egg",
+	"overrides": [
+		{
+			"predicate": { "custom_model_data": 1 },
+			"model": "logiccraft:item/and"
+		},
+		{
+			"predicate": { "custom_model_data": 2 },
+			"model": "logiccraft:item/or"
+		},
+		{
+			"predicate": { "custom_model_data": 3 },
+			"model": "logiccraft:item/not"
+		},
+		{
+			"predicate": { "custom_model_data": 4 },
+			"model": "logiccraft:item/condition"
+		},
+		{
+			"predicate": { "custom_model_data": 5 },
+			"model": "logiccraft:item/bicondition"
+		},
+		{
+			"predicate": { "custom_model_data": 6 },
+			"model": "logiccraft:item/contradiction"
+		},
+		{
+			"predicate": { "custom_model_data": 7 },
+			"model": "logiccraft:item/open_parens"
+		},
+		{
+			"predicate": { "custom_model_data": 8 },
+			"model": "logiccraft:item/close_parens"
+		},
+		{
+			"predicate": { "custom_model_data": 9 },
+			"model": "logiccraft:item/subproof"
+		},
+		{
+			"predicate": { "custom_model_data": 10 },
+			"model": "logiccraft:item/letter_a"
+		},
+		{
+			"predicate": { "custom_model_data": 11 },
+			"model": "logiccraft:item/letter_b"
+		},
+		{
+			"predicate": { "custom_model_data": 12 },
+			"model": "logiccraft:item/letter_c"
+		},
+		{
+			"predicate": { "custom_model_data": 13 },
+			"model": "logiccraft:item/letter_d"
+		},
+		{
+			"predicate": { "custom_model_data": 14 },
+			"model": "logiccraft:item/letter_e"
+		},
+		{
+			"predicate": { "custom_model_data": 15 },
+			"model": "logiccraft:item/letter_f"
+		},
+		{
+			"predicate": { "custom_model_data": 16 },
+			"model": "logiccraft:item/letter_g"
+		},
+		{
+			"predicate": { "custom_model_data": 17 },
+			"model": "logiccraft:item/letter_h"
+		},
+		{
+			"predicate": { "custom_model_data": 18 },
+			"model": "logiccraft:item/letter_i"
+		},
+		{
+			"predicate": { "custom_model_data": 19 },
+			"model": "logiccraft:item/letter_j"
+		},
+		{
+			"predicate": { "custom_model_data": 20 },
+			"model": "logiccraft:item/letter_k"
+		},
+		{
+			"predicate": { "custom_model_data": 21 },
+			"model": "logiccraft:item/letter_l"
+		},
+		{
+			"predicate": { "custom_model_data": 22 },
+			"model": "logiccraft:item/letter_m"
+		},
+		{
+			"predicate": { "custom_model_data": 23 },
+			"model": "logiccraft:item/letter_n"
+		},
+		{
+			"predicate": { "custom_model_data": 24 },
+			"model": "logiccraft:item/letter_o"
+		},
+		{
+			"predicate": { "custom_model_data": 25 },
+			"model": "logiccraft:item/letter_p"
+		},
+		{
+			"predicate": { "custom_model_data": 26 },
+			"model": "logiccraft:item/letter_q"
+		},
+		{
+			"predicate": { "custom_model_data": 27 },
+			"model": "logiccraft:item/letter_r"
+		},
+		{
+			"predicate": { "custom_model_data": 28 },
+			"model": "logiccraft:item/letter_s"
+		},
+		{
+			"predicate": { "custom_model_data": 29 },
+			"model": "logiccraft:item/letter_t"
+		},
+		{
+			"predicate": { "custom_model_data": 30 },
+			"model": "logiccraft:item/letter_u"
+		},
+		{
+			"predicate": { "custom_model_data": 31 },
+			"model": "logiccraft:item/letter_v"
+		},
+		{
+			"predicate": { "custom_model_data": 32 },
+			"model": "logiccraft:item/letter_w"
+		},
+		{
+			"predicate": { "custom_model_data": 33 },
+			"model": "logiccraft:item/letter_x"
+		},
+		{
+			"predicate": { "custom_model_data": 34 },
+			"model": "logiccraft:item/letter_y"
+		},
+		{
+			"predicate": { "custom_model_data": 35 },
+			"model": "logiccraft:item/letter_z"
+		}
+	]
+}

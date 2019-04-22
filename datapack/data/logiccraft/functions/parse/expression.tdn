@@ -1,0 +1,15 @@
+@require logiccraft:parse/line
+
+function logiccraft:parse/value
+
+eval getChar(function {
+    if data entity @s ArmorItems[3].tag.Symbol{type:"binary"} function {
+        data modify block 0 ~ -1 RecordItem.tag.tempTree append from entity @s ArmorItems[3].tag.Symbol
+        data modify block 0 ~ -1 RecordItem.tag.tempTree[-1].operands append from block 0 ~ -1 RecordItem.tag.tree
+        eval advanceCursor()
+        function logiccraft:parse/value
+        data modify block 0 ~ -1 RecordItem.tag.tempTree[-1].operands append from block 0 ~ -1 RecordItem.tag.tree
+        data modify block 0 ~ -1 RecordItem.tag.tree set from block 0 ~ -1 RecordItem.tag.tempTree[-1]
+        data remove block 0 ~ -1 RecordItem.tag.tempTree[-1]
+    }
+}, false)

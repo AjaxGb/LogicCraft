@@ -1,0 +1,2 @@
+align xyz particle barrier ~0.5 ~0.5 ~1.2 0 0 0 0 1 force
+data remove block 0 ~ -1 RecordItem.tag.tree

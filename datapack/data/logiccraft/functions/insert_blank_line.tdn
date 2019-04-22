@@ -1,0 +1,28 @@
+clone -1 6 0 64 ~ 0 -1 5 0 replace force
+clone -1 6 -1 0 ~ -1 -1 5 -1 replace force
+positioned ~ ~-1 ~ align y as @e[type=$symbol,x=0,z=0,dx=64,dy=-255,dz=0] at @s teleport @s ~ ~-1 ~
+positioned ~ ~-1 ~ align y as @e[type=$line_icon,x=-1,z=1,dx=0,dy=-255,dz=0] at @s function update_line_icons {
+    teleport @s ~ ~-1 ~
+    scoreboard players add @s lineNum 1
+}
+
+# Update all justifications pointing to affected lines
+store result score #CURR temp data get entity @s Pos[1]
+scoreboard players set #CURR lineNum 256
+scoreboard players operation #CURR lineNum -= #CURR temp
+
+as @e[type=$line_icon] function update_justifications {
+    if score @s justif1Start > #CURR lineNum scoreboard players add @s justif1Start 1
+    if score @s justif1End   > #CURR lineNum scoreboard players add @s justif1End 1
+    if score @s justif2Start > #CURR lineNum scoreboard players add @s justif2Start 1
+    if score @s justif2End   > #CURR lineNum scoreboard players add @s justif2End 1
+    if score @s justif3Start > #CURR lineNum scoreboard players add @s justif3Start 1
+    if score @s justif3End   > #CURR lineNum scoreboard players add @s justif3End 1
+    
+    scoreboard players operation #ACTIVE justif1Start = @s[tag=activeLine,scores={justif1Start=isset}] justif1Start
+    scoreboard players operation #ACTIVE justif1End   = @s[tag=activeLine,scores={justif1End=isset}] justif1End
+    scoreboard players operation #ACTIVE justif2Start = @s[tag=activeLine,scores={justif2Start=isset}] justif2Start
+    scoreboard players operation #ACTIVE justif2End   = @s[tag=activeLine,scores={justif2End=isset}] justif2End
+    scoreboard players operation #ACTIVE justif3Start = @s[tag=activeLine,scores={justif3Start=isset}] justif3Start
+    scoreboard players operation #ACTIVE justif3End   = @s[tag=activeLine,scores={justif3End=isset}] justif3End
+}

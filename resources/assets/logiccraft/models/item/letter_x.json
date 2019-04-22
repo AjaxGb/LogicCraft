@@ -1,0 +1,6 @@
+{
+	"parent": "logiccraft:item/symbol",
+	"textures": {
+		"layer0": "logiccraft:symbol/letter_x"
+	}
+}

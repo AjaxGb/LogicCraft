@@ -1,0 +1,16 @@
+@require logiccraft:define_blocks
+
+teleport @s 5 251 8 180 0
+fill 4 250 7 6 250 9 minecraft:light_gray_stained_glass
+
+kill @e[type=$symbol]
+kill @e[type=$line_icon]
+fill 0 255 0 0 255 0 ${backgrounds.premStart}
+fill 1 255 0 64 255 0 ${backgrounds.prem}
+fill 0 254 0 0 5 0 ${backgrounds.bodyStart}
+fill 1 254 0 64 5 0 ${backgrounds.body}
+fill -1 255 0 -1 5 0 minecraft:black_concrete
+fill 0 255 -1 0 5 -1 minecraft:stone
+fill 0 255 -1 0 5 -1 minecraft:jukebox{RecordItem:{id:"minecraft:stone",Count:1b}}
+
+scoreboard players reset #ACTIVE

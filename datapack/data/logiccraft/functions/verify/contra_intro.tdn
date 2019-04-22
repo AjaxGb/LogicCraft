@@ -1,0 +1,33 @@
+
+unless data block 0 ~ -1 RecordItem.tag.tree{identifier:"contradiction"} data modify entity @s ArmorItems[3].tag.CustomModelData set value 3
+unless score #CURR_SINGLE temp matches 2 data modify entity @s ArmorItems[3].tag.CustomModelData set value 3
+unless score #CURR_SUBPRF temp matches 0 data modify entity @s ArmorItems[3].tag.CustomModelData set value 3
+
+if data block 0 ~ -1 RecordItem.tag.tree{identifier:"contradiction"}
+        if score #CURR_SINGLE temp matches 2
+        if score #CURR_SUBPRF temp matches 0 function correct_base {
+    
+    data modify block $tempDataPos RecordItem.tag.input1 set value false
+    data modify block $tempDataPos RecordItem.tag.input2 set value false
+    as @e[type=$line_icon] at @s positioned ~ ~ ~-1 align xyz function copy_parsed {
+        if score @s lineNum = #CURR_SINGLE justif1Start function copy1 {
+            unless data block 0 ~ -1 RecordItem.tag.tree function logiccraft:parse/line
+            data modify block $tempDataPos RecordItem.tag.input1 set from block 0 ~ -1 RecordItem.tag.tree
+        }
+        if score @s lineNum = #CURR_SINGLE justif2Start function copy2 {
+            unless data block 0 ~ -1 RecordItem.tag.tree function logiccraft:parse/line
+            data modify block $tempDataPos RecordItem.tag.input2 set from block 0 ~ -1 RecordItem.tag.tree
+        }
+    }
+    
+    data modify block $tempDataPos RecordItem.tag.verifyTree set from block $tempDataPos RecordItem.tag.input1
+    store success score @s temp data modify block $tempDataPos RecordItem.tag.verifyTree set from block $tempDataPos RecordItem.tag.input2.operand
+    unless data block $tempDataPos RecordItem.tag.input2{op:"not"} scoreboard players set @s temp 1
+    if score @s temp matches 1.. function no_match_1 {
+        store success score @s temp data modify block $tempDataPos RecordItem.tag.input2 set from block $tempDataPos RecordItem.tag.input1.operand
+        unless data block $tempDataPos RecordItem.tag.input1{op:"not"} scoreboard players set @s temp 1
+    }
+    
+    if score @s temp matches 0 data modify entity @s ArmorItems[3].tag.CustomModelData set value 2
+    if score @s temp matches 1.. data modify entity @s ArmorItems[3].tag.CustomModelData set value 3
+}

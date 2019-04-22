@@ -1,0 +1,14 @@
+{
+  "default-namespace": "logiccraft",
+  "language-level": 3,
+  "datapack-output": "path/to/save/datapacks/LogicCraft.zip",
+  "resources-output": "path/to/save/resources.zip",
+  "export-comments": true,
+  "strict-text-components": false,
+  "game-logger": {
+    "compact": false,
+    "timestamp-enabled": true,
+    "line-number-enabled": false,
+    "pos-enabled": true
+  }
+}

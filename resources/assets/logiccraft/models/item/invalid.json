@@ -1,0 +1,6 @@
+{
+	"parent": "logiccraft:item/validity",
+	"textures": {
+		"layer0": "logiccraft:symbol/invalid"
+	}
+}

@@ -1,0 +1,67 @@
+
+data modify entity @s ArmorItems[3].tag.CustomModelData set value 4
+
+if score @s justif1Start matches 0.. tag @s add justif1Unused
+if score @s justif2Start matches 0.. tag @s add justif2Unused
+if score @s justif3Start matches 0.. tag @s add justif3Unused
+
+scoreboard players reset #CURR_SINGLE
+scoreboard players reset #CURR_SUBPRF
+scoreboard players set #CURR_SINGLE temp 0
+scoreboard players set #CURR_SUBPRF temp 0
+if score @s justif1Start matches 0.. if score @s justif1Start = @s justif1End function 1_is_single {
+    scoreboard players operation #CURR_SINGLE justif1Start = @s justif1Start
+    scoreboard players add #CURR_SINGLE temp 1
+}
+if score @s justif1Start matches 0.. if score @s justif1Start < @s justif1End function 1_is_subprf {
+    scoreboard players operation #CURR_SUBPRF justif1Start = @s justif1Start
+    scoreboard players operation #CURR_SUBPRF justif1End = @s justif1End
+    scoreboard players add #CURR_SUBPRF temp 1
+}
+if score @s justif2Start matches 0.. if score @s justif2Start = @s justif2End function 2_is_single {
+    if score #CURR_SINGLE temp matches 0 scoreboard players operation #CURR_SINGLE justif1Start = @s justif2Start
+    if score #CURR_SINGLE temp matches 1 scoreboard players operation #CURR_SINGLE justif2Start = @s justif2Start
+    scoreboard players add #CURR_SINGLE temp 1
+}
+if score @s justif2Start matches 0.. if score @s justif2Start < @s justif2End function 2_is_subprf {
+    if score #CURR_SINGLE temp matches 0 scoreboard players operation #CURR_SINGLE justif1Start = @s justif2Start
+    if score #CURR_SINGLE temp matches 0 scoreboard players operation #CURR_SINGLE justif1End = @s justif2End
+    if score #CURR_SINGLE temp matches 1 scoreboard players operation #CURR_SINGLE justif2Start = @s justif2Start
+    if score #CURR_SINGLE temp matches 1 scoreboard players operation #CURR_SINGLE justif2End = @s justif2End
+    scoreboard players add #CURR_SUBPRF temp 1
+}
+if score @s justif3Start matches 0.. if score @s justif3Start = @s justif3End function 3_is_single {
+    if score #CURR_SINGLE temp matches 0 scoreboard players operation #CURR_SINGLE justif1Start = @s justif3Start
+    if score #CURR_SINGLE temp matches 1 scoreboard players operation #CURR_SINGLE justif2Start = @s justif3Start
+    if score #CURR_SINGLE temp matches 2 scoreboard players operation #CURR_SINGLE justif3Start = @s justif3Start
+    scoreboard players add #CURR_SINGLE temp 1
+}
+if score @s justif3Start matches 0.. if score @s justif3Start < @s justif3End function 3_is_subprf {
+    if score #CURR_SINGLE temp matches 0 scoreboard players operation #CURR_SINGLE justif1Start = @s justif3Start
+    if score #CURR_SINGLE temp matches 0 scoreboard players operation #CURR_SINGLE justif1End = @s justif3End
+    if score #CURR_SINGLE temp matches 1 scoreboard players operation #CURR_SINGLE justif2Start = @s justif3Start
+    if score #CURR_SINGLE temp matches 1 scoreboard players operation #CURR_SINGLE justif2End = @s justif3End
+    if score #CURR_SINGLE temp matches 2 scoreboard players operation #CURR_SINGLE justif3Start = @s justif3Start
+    if score #CURR_SINGLE temp matches 2 scoreboard players operation #CURR_SINGLE justif3End = @s justif3End
+    scoreboard players add #CURR_SUBPRF temp 1
+}
+
+unless data block 0 ~ -1 RecordItem.tag.tree function logiccraft:parse/line
+if data block 0 ~ -1 RecordItem.tag.tree function after_parse {
+    if data block 0 ~ -1 RecordItem.tag{justifOp:"and",justifIntro:true} run function logiccraft:verify/and_intro
+    if data block 0 ~ -1 RecordItem.tag{justifOp:"and",justifIntro:false} run function logiccraft:verify/and_elim
+    # or intro
+    # or elim
+    # not intro
+    if data block 0 ~ -1 RecordItem.tag{justifOp:"not",justifIntro:false} run function logiccraft:verify/not_elim
+    if data block 0 ~ -1 RecordItem.tag{justifOp:"contradiction",justifIntro:true} run function logiccraft:verify/contra_intro
+    if data block 0 ~ -1 RecordItem.tag{justifOp:"contradiction",justifIntro:false} run function logiccraft:verify/contra_elim
+    # condit intro
+    # condit elim
+    # bicon intro
+    # bicon elim
+}
+
+tag @s remove justif1Unused
+tag @s remove justif2Unused
+tag @s remove justif3Unused

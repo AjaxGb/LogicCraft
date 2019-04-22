@@ -1,0 +1,54 @@
+
+unless data block 0 ~ -1 RecordItem.tag.tree{op:"and"} data modify entity @s ArmorItems[3].tag.CustomModelData set value 3
+unless score #CURR_SINGLE temp matches 2 data modify entity @s ArmorItems[3].tag.CustomModelData set value 3
+unless score #CURR_SUBPRF temp matches 0 data modify entity @s ArmorItems[3].tag.CustomModelData set value 3
+
+if data block 0 ~ -1 RecordItem.tag.tree{op:"and"}
+        if score #CURR_SINGLE temp matches 2
+        if score #CURR_SUBPRF temp matches 0 function correct_base {
+    
+    data modify block $tempDataPos RecordItem.tag.input1 set value false
+    data modify block $tempDataPos RecordItem.tag.input2 set value false
+    as @e[type=$line_icon] at @s positioned ~ ~ ~-1 align xyz function copy_parsed {
+        if score @s lineNum = #CURR_SINGLE justif1Start function copy1 {
+            unless data block 0 ~ -1 RecordItem.tag.tree function logiccraft:parse/line
+            data modify block $tempDataPos RecordItem.tag.input1 set from block 0 ~ -1 RecordItem.tag.tree
+        }
+        if score @s lineNum = #CURR_SINGLE justif2Start function copy2 {
+            unless data block 0 ~ -1 RecordItem.tag.tree function logiccraft:parse/line
+            data modify block $tempDataPos RecordItem.tag.input2 set from block 0 ~ -1 RecordItem.tag.tree
+        }
+    }
+    
+    data modify block $tempDataPos RecordItem.tag.verifyTree set from block 0 ~ -1 RecordItem.tag.tree.operands[0]
+    store success score @s temp data modify block $tempDataPos RecordItem.tag.verifyTree set from block $tempDataPos RecordItem.tag.input1
+    if score @s temp matches 0 function matched_first_to_1 {
+        tag @s add matchedFirst
+        
+        data modify block $tempDataPos RecordItem.tag.verifyTree set from block 0 ~ -1 RecordItem.tag.tree.operands[1]
+        store success score @s temp data modify block $tempDataPos RecordItem.tag.verifyTree set from block $tempDataPos RecordItem.tag.input2
+        
+        if score @s temp matches 0 tag @s add matchedSecond
+    }
+    if entity @s[tag=!matchedFirst] function try_match_first_to_2 {
+        
+        data modify block $tempDataPos RecordItem.tag.verifyTree set from block 0 ~ -1 RecordItem.tag.tree.operands[0]
+        store success score @s temp data modify block $tempDataPos RecordItem.tag.verifyTree set from block $tempDataPos RecordItem.tag.input2
+        
+        if score @s temp matches 0 function worked {
+            tag @s add matchedFirst
+            
+            data modify block $tempDataPos RecordItem.tag.verifyTree set from block 0 ~ -1 RecordItem.tag.tree.operands[1]
+            store success score @s temp data modify block $tempDataPos RecordItem.tag.verifyTree set from block $tempDataPos RecordItem.tag.input1
+            
+            if score @s temp matches 0 tag @s add matchedSecond
+        }
+    }
+    
+    if entity @s[tag=matchedFirst,tag=matchedSecond] data modify entity @s ArmorItems[3].tag.CustomModelData set value 2
+    if entity @s[tag=!matchedFirst] data modify entity @s ArmorItems[3].tag.CustomModelData set value 3
+    if entity @s[tag=!matchedSecond] data modify entity @s ArmorItems[3].tag.CustomModelData set value 3
+    
+    tag @s remove matchedFirst
+    tag @s remove matchedSecond
+}

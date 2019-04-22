@@ -1,0 +1,36 @@
+@on compile
+@priority 1000
+
+global var screenStart = coordinates<0 255 0>
+global var screenMaxWidth = 100
+global var screenMaxHeight = screenStart.getMagnitude(Axis.Y) - 5
+
+global var letters = "abcdefghijklmnopqrstuvwxyz"
+global var binaryOps = ["and", "or", "condition", "bicondition"]
+global var unaryOps = ["not"]
+global var identifiers = ["contradiction"]
+for (letter in letters) {
+    eval identifiers.add("letter_" + letter)
+}
+global var symbols = []
+for (sym in binaryOps) {
+    eval symbols.add(sym)
+}
+for (sym in unaryOps) {
+    eval symbols.add(sym)
+}
+for (sym in identifiers) {
+    eval symbols.add(sym)
+}
+
+global var lineDataPos = coordinates<-1 ~ ~>
+global var tempDataPos = coordinates<0 255 -1>
+
+define objective temp dummy
+
+
+global var resourceStem = function(location) {
+    var body = location.body
+    var body = body.substring(0, body.lastIndexOf("/"))
+    return location.namespace + ":" + body
+}

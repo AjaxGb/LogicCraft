@@ -1,0 +1,11 @@
+@require logiccraft:line_icon
+
+data modify entity @s ArmorItems[3].tag.CustomModelData set value 1
+data remove block 0 ~ -1 RecordItem.tag.tree
+
+scoreboard players operation #TEMP lineNum = @s lineNum
+as @e[type=$line_icon] function reset_dependents {
+    if score @s justif1Start <= #TEMP lineNum if score @s justif1End >= #TEMP lineNum data modify entity @s ArmorItems[3].tag.CustomModelData set value 1
+    if score @s justif2Start <= #TEMP lineNum if score @s justif2End >= #TEMP lineNum data modify entity @s ArmorItems[3].tag.CustomModelData set value 1
+    if score @s justif3Start <= #TEMP lineNum if score @s justif3End >= #TEMP lineNum data modify entity @s ArmorItems[3].tag.CustomModelData set value 1
+}

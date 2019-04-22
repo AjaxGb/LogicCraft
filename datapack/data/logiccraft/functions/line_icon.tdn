@@ -1,0 +1,97 @@
+@on compile
+
+define objective lineNum dummy
+define objective lineChars dummy
+define objective justif1Start dummy
+define objective justif1End dummy
+define objective justif2Start dummy
+define objective justif2End dummy
+define objective justif3Start dummy
+define objective justif3End dummy
+
+define entity line_icon minecraft:armor_stand {
+    default nbt {
+        Marker: true,
+        Invisible: true,
+        Invulnerable: true,
+        Fire: 20s,
+        ArmorItems: [
+            {},
+            {},
+            {},
+            {
+                id: "minecraft:coal",
+                Count: 1b,
+                tag: {
+                    CustomModelData: 1
+                }
+            }
+        ]
+    }
+    
+    ticking positioned ~ ~ ~-1 align xyz function tick {
+        data merge entity @s {Fire:20s}
+        
+        if block ~ ~ ~ minecraft:air function destroyed {
+            
+            at @e[tag=activeLine] setblock ~ ~ ~-1 minecraft:black_concrete
+            scoreboard players reset #ACTIVE justif1Start
+            scoreboard players reset #ACTIVE justif1End
+            scoreboard players reset #ACTIVE justif2Start
+            scoreboard players reset #ACTIVE justif2End
+            scoreboard players reset #ACTIVE justif3Start
+            scoreboard players reset #ACTIVE justif3End
+            
+            if entity @s[tag=!activeLine,tag=!premise] function activate {
+                setblock ~ ~ ~ minecraft:diamond_block
+                tag @s add needActiveLine
+                
+                scoreboard players operation #ACTIVE justif1Start = @s[scores={justif1Start=isset}] justif1Start
+                scoreboard players operation #ACTIVE justif1End = @s[scores={justif1End=isset}] justif1End
+                scoreboard players operation #ACTIVE justif2Start = @s[scores={justif2Start=isset}] justif2Start
+                scoreboard players operation #ACTIVE justif2End = @s[scores={justif2End=isset}] justif2End
+                scoreboard players operation #ACTIVE justif3Start = @s[scores={justif3Start=isset}] justif3Start
+                scoreboard players operation #ACTIVE justif3End = @s[scores={justif3End=isset}] justif3End
+            }
+            if entity @s[tag=!activeLine,tag=premise] function no_activate {
+                setblock ~ ~ ~ minecraft:black_concrete
+                title @a actionbar {"text":"You cannot justify premises","color":"red"}
+            }
+            if entity @s[tag=activeLine] function deactivate {
+                setblock ~ ~ ~ minecraft:black_concrete
+            }
+            
+            tag @e[tag=activeLine] remove activeLine
+            tag @s[tag=needActiveLine] add activeLine
+            tag @s[tag=needActiveLine] remove needActiveLine
+        }
+        
+        define function highlight_justification {
+            scoreboard players operation @s temp -= @s lineNum
+            
+            if score @s temp matches 0 function draw_single {
+                particle dust 0 1 0 0.6 ~0.5 ~0.8 ~1.05 0.15 0 0 0 5 force
+                particle dust 0 1 0 0.6 ~0.5 ~0.2 ~1.05 0.15 0 0 0 5 force
+                particle dust 0 1 0 0.6 ~0.2 ~0.5 ~1.05 0 0.15 0 0 5 force
+                particle dust 0 1 0 0.6 ~0.8 ~0.5 ~1.05 0 0.15 0 0 5 force
+            }
+            
+            if score @s temp matches 1.. particle dust 1 1 0 0.6 ~0.5 ~1 ~1.05 0.2 0 0 0 5 force
+            if score @s temp matches 1.. function draw_sides {
+                particle dust 1 1 0 0.6 ~0 ~0.5 ~1.05 0 0.2 0 0 5 force
+                particle dust 1 1 0 0.6 ~1 ~0.5 ~1.05 0 0.2 0 0 5 force
+                
+                scoreboard players remove @s temp 1
+                if score @s temp matches -1 particle dust 1 1 0 0.6 ~0.5 ~0 ~1.05 0.2 0 0 0 5 force
+                if score @s temp matches 0.. positioned ~ ~-1 ~ function /
+            }
+        }
+        
+        if score @s lineNum = #ACTIVE justif1Start scoreboard players operation @s temp = #ACTIVE justif1End
+        if score @s lineNum = #ACTIVE justif1Start function /highlight_justification
+        if score @s lineNum = #ACTIVE justif2Start scoreboard players operation @s temp = #ACTIVE justif2End
+        if score @s lineNum = #ACTIVE justif2Start function /highlight_justification
+        if score @s lineNum = #ACTIVE justif3Start scoreboard players operation @s temp = #ACTIVE justif3End
+        if score @s lineNum = #ACTIVE justif3Start function /highlight_justification
+    }
+}
