@@ -3,8 +3,8 @@
 LogicCraft is a Fitch-like logical proof checker, written in
 Minecraft commands using the Trident command preprocessor.
 
-[Trident Language](https://github.com/Energyxxer/Trident-Language/releases)
-[Trident IDE](https://github.com/Energyxxer/Trident-UI/releases)
+[Trident Language](https://github.com/Energyxxer/Trident-Language/releases)  
+[Trident IDE](https://github.com/Energyxxer/Trident-UI/releases)  
 [Trident Discord](https://discord.gg/VpfA3c6)
 
 ## Setup
@@ -22,3 +22,23 @@ need.
 ## Usage
 
 TODO
+
+## Rules
+
+Thus far, the following rules have been implemented:
+
+### AND Intro
+Cite: Two sentences of any kind.  
+Produces: The conjunction of the two expressions.
+### AND Elim
+Cite: One conjunction.  
+Produces: Either of the two conjuncts.
+### NOT Elim
+Cite: A negation of a negation.  
+Produces: The sentence with the two negations removed.
+### CONTRADICTION Intro
+Cite: A sentence and its negation.  
+Produces: A contradiction.
+### CONTRADICTION Elim
+Cite: A contradiction.  
+Produces: Any sentence.
