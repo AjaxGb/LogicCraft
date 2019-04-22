@@ -30,4 +30,3 @@ eval getChar(function {
 
 kill @e[tag=parseCursor]
 data remove block 0 ~ -1 RecordItem.tag.tempTree
-tellraw @a ["Result: ",{"nbt":"RecordItem.tag.tree","block":"0 ~ -1"}]
