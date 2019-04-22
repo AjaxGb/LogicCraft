@@ -3,6 +3,32 @@
 teleport @s 5 251 8 180 0
 fill 4 250 7 6 250 9 minecraft:light_gray_stained_glass
 
+fill 3 251 9 3 252 8 minecraft:light_gray_stained_glass
+setblock 4 252 9 minecraft:birch_wall_sign[facing=east]{
+    Text1: '{"text":""}',
+    Text2: '{"text":"Verify"}',
+    Text3: '{"text":"Selected Line"}',
+    Text4: '{"text":"","clickEvent":{"action":"run_command","value":"/function logiccraft:verify/active_line"}}'
+}
+setblock 4 252 8 minecraft:birch_wall_sign[facing=east]{
+    Text1: '{"text":""}',
+    Text2: '{"text":"Verify"}',
+    Text3: '{"text":"Every Line"}',
+    Text4: '{"text":"","clickEvent":{"action":"run_command","value":"/function logiccraft:verify/every_line"}}'
+}
+setblock 4 251 9 minecraft:birch_wall_sign[facing=east]{
+    Text1: '{"text":""}',
+    Text2: '{"text":"Clear Screen"}',
+    Text3: '{"text":""}',
+    Text4: '{"text":"","clickEvent":{"action":"run_command","value":"/function logiccraft:clear_screen"}}'
+}
+setblock 4 251 8 minecraft:birch_wall_sign[facing=east]{
+    Text1: '{"text":""}',
+    Text2: '{"text":"Give Me"}',
+    Text3: '{"text":"All The Symbols"}',
+    Text4: '{"text":"","clickEvent":{"action":"run_command","value":"/function logiccraft:give_me_symbols"}}'
+}
+
 kill @e[type=$symbol]
 kill @e[type=$line_icon]
 fill 0 255 0 0 255 0 ${backgrounds.premStart}
