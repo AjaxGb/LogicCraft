@@ -48,14 +48,14 @@ if score @s justif3Start matches 0.. if score @s justif3Start < @s justif3End fu
 
 unless data block 0 ~ -1 RecordItem.tag.tree function logiccraft:parse/line
 if data block 0 ~ -1 RecordItem.tag.tree function after_parse {
-    if data block 0 ~ -1 RecordItem.tag{justifOp:"and",justifIntro:true} run function logiccraft:verify/and_intro
-    if data block 0 ~ -1 RecordItem.tag{justifOp:"and",justifIntro:false} run function logiccraft:verify/and_elim
+    if data block 0 ~ -1 RecordItem.tag{justifOp:"and",justifIntro:true} run function logiccraft:verify/rules/and_intro
+    if data block 0 ~ -1 RecordItem.tag{justifOp:"and",justifIntro:false} run function logiccraft:verify/rules/and_elim
     # or intro
     # or elim
     # not intro
-    if data block 0 ~ -1 RecordItem.tag{justifOp:"not",justifIntro:false} run function logiccraft:verify/not_elim
-    if data block 0 ~ -1 RecordItem.tag{justifOp:"contradiction",justifIntro:true} run function logiccraft:verify/contra_intro
-    if data block 0 ~ -1 RecordItem.tag{justifOp:"contradiction",justifIntro:false} run function logiccraft:verify/contra_elim
+    if data block 0 ~ -1 RecordItem.tag{justifOp:"not",justifIntro:false} run function logiccraft:verify/rules/not_elim
+    if data block 0 ~ -1 RecordItem.tag{justifOp:"contradiction",justifIntro:true} run function logiccraft:verify/rules/contra_intro
+    if data block 0 ~ -1 RecordItem.tag{justifOp:"contradiction",justifIntro:false} run function logiccraft:verify/rules/contra_elim
     # condit intro
     # condit elim
     # bicon intro
