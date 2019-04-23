@@ -48,9 +48,13 @@ function logiccraft:clear_screen
 function logiccraft:give_me_symbols
 ```
 
+Subproofs are required for some of the Fitch rules. While the
+existing code is designed to allow easy addition of subproofs, they
+haven't actually been added yet.
+
 ## Rules
 
-Thus far, the following rules have been implemented:
+All rules that do not require subproofs have been implemented.
 
 ### AND Intro
 Cite: Two sentences of any kind.  
