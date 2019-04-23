@@ -50,16 +50,16 @@ unless data block 0 ~ -1 RecordItem.tag.tree function logiccraft:parse/line
 if data block 0 ~ -1 RecordItem.tag.tree function after_parse {
     if data block 0 ~ -1 RecordItem.tag{justifOp:"and",justifIntro:true} run function logiccraft:verify/rules/and_intro
     if data block 0 ~ -1 RecordItem.tag{justifOp:"and",justifIntro:false} run function logiccraft:verify/rules/and_elim
-    # or intro
-    # or elim
-    # not intro
+    if data block 0 ~ -1 RecordItem.tag{justifOp:"or",justifIntro:true} run function logiccraft:verify/rules/or_intro
+    # if data block 0 ~ -1 RecordItem.tag{justifOp:"or",justifIntro:false} run function logiccraft:verify/rules/or_elim
+    # if data block 0 ~ -1 RecordItem.tag{justifOp:"not",justifIntro:true} run function logiccraft:verify/rules/not_intro
     if data block 0 ~ -1 RecordItem.tag{justifOp:"not",justifIntro:false} run function logiccraft:verify/rules/not_elim
     if data block 0 ~ -1 RecordItem.tag{justifOp:"contradiction",justifIntro:true} run function logiccraft:verify/rules/contra_intro
     if data block 0 ~ -1 RecordItem.tag{justifOp:"contradiction",justifIntro:false} run function logiccraft:verify/rules/contra_elim
-    # condit intro
-    # condit elim
-    # bicon intro
-    # bicon elim
+    # if data block 0 ~ -1 RecordItem.tag{justifOp:"condition",justifIntro:true} run function logiccraft:verify/rules/condit_intro
+    if data block 0 ~ -1 RecordItem.tag{justifOp:"condition",justifIntro:false} run function logiccraft:verify/rules/condit_elim
+    # if data block 0 ~ -1 RecordItem.tag{justifOp:"bicondition",justifIntro:true} run function logiccraft:verify/rules/bicon_intro
+    if data block 0 ~ -1 RecordItem.tag{justifOp:"bicondition",justifIntro:false} run function logiccraft:verify/rules/bicon_elim
 }
 
 tag @s remove justif1Unused
