@@ -11,13 +11,24 @@ Minecraft commands using the Trident command preprocessor.
 
 The source files can be compiled with Trident, which will produce
 a data pack and a resource pack. These may be placed in a save
-file. LogicCraft should work in most worlds, but works best in
-superflat worlds that do not extend above Y=5.
+file. Alternatively, you can find the precompiled packs, and a world
+with them preinstalled, on the [releases](https://github.com/AjaxGb/LogicCraft/releases)
+page.
+LogicCraft assumes:
+* You are playing in Minecraft Java Edition 1.14 or later.
+Snapshot versions should be fine.
+* There is only one player in the world at a time, or at least
+only one interacting with LogicCraft at a time.
+* The player is in Creative. Not a *strict* requirement, but
+without fly mode and infinite items it will be very difficult
+to write on the screen.
+
+Other than that, it should work in most worlds, but it works
+best in worlds that do not have high, screen-blocking terrain.
 
 Once you have added the datapack and resource pack to the world,
 enter the console command `/function logiccraft:clear_screen` to
-setup the screen and `/function logiccraft:give_me_symbols` to get
-all the symbols you need.
+set up the screen and some clickable utility signs.
 
 ## Usage
 
