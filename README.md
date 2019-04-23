@@ -5,7 +5,7 @@ Minecraft commands using the Trident command preprocessor.
 
 [Trident Language](https://github.com/Energyxxer/Trident-Language/releases)  
 [Trident IDE](https://github.com/Energyxxer/Trident-UI/releases)  
-[Trident Discord](https://discord.gg/VpfA3c6)
+[Trident Development Discord](https://discord.gg/VpfA3c6)
 
 ## Setup
 
@@ -56,8 +56,21 @@ Thus far, the following rules have been implemented:
 Cite: Two sentences of any kind.  
 Produces: The conjunction of the two expressions.
 ### AND Elim
-Cite: One conjunction.  
+Cite: A conjunction.  
 Produces: Either of the two conjuncts.
+### OR Intro
+Cite: A sentence of any kind.  
+Produces: The disjunction of that sentence with any sentence.
+### ~~OR Elim~~
+**Requires subproofs**  
+Cite: A disjunction and a subproof for each side of the disjunction.
+Each subproof should start with its respective side, and both should
+have the same conclusion.  
+Produces: The shared conclusion of both subproofs.
+### ~~NOT Intro~~
+**Requires subproofs**  
+Cite: A subproof that concludes in a contradiction.  
+Produces: The negation of the subproof's premise.
 ### NOT Elim
 Cite: A negation of a negation.  
 Produces: The sentence with the two negations removed.
@@ -67,3 +80,21 @@ Produces: A contradiction.
 ### CONTRADICTION Elim
 Cite: A contradiction.  
 Produces: Any sentence.
+### ~~CONDITIONAL Intro~~
+**Requires subproofs**  
+Cite: A subproof of any kind.  
+Produces: A conditional that connects the subproof's premise to its
+conclusion.
+### CONDITIONAL Elim
+Cite: A conditional and a sentence that is the antecedent of that
+conditional.  
+Produces: The consequent of the conditional.
+### ~~BICONDITIONAL Intro~~
+**Requires subproofs**  
+Cite: Two subproofs, where one's premise is the other's conclusion
+and vice versa.  
+Produces: A biconditional that connects the two sentences.
+### BICONDITIONAL Elim
+Cite: A biconditional and a sentence that appears on either side of
+that biconditional.  
+Produces: The other side of the biconditional.
